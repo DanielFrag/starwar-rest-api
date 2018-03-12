@@ -10,8 +10,18 @@ import (
 	"time"
 )
 
-//PerformRequest wrap request for external resources
-func PerformRequest(url, method string, headers map[string]string, body io.Reader) ([]byte, error) {
+//RequestWrapper exposes the method to perform a web request
+type RequestWrapper interface {
+	PerformRequest(url string, method string, headers map[string]string, body io.Reader) ([]byte, error)
+}
+
+//RequestUtils wrap the web request for external resources
+type RequestUtils struct {
+	client *http.Client
+}
+
+//PerformRequest perform a web request
+func (r *RequestUtils) PerformRequest(url, method string, headers map[string]string, body io.Reader) ([]byte, error) {
 	request, requestError := http.NewRequest(method, url, body)
 	if requestError != nil {
 		return nil, requestError
@@ -21,10 +31,10 @@ func PerformRequest(url, method string, headers map[string]string, body io.Reade
 			request.Header.Set(k, v)
 		}
 	}
-	customClient := &http.Client{
-		Timeout: time.Second * time.Duration(getTimeoutNumber()),
+	if r.client == nil {
+		r.initializeClient()
 	}
-	response, requisitionError := customClient.Do(request)
+	response, requisitionError := r.client.Do(request)
 	if requisitionError != nil {
 		return nil, requisitionError
 	}
@@ -37,6 +47,12 @@ func PerformRequest(url, method string, headers map[string]string, body io.Reade
 		return nil, readBodyError
 	}
 	return bodyByte, nil
+}
+
+func (r *RequestUtils) initializeClient() {
+	r.client = &http.Client{
+		Timeout: time.Second * time.Duration(getTimeoutNumber()),
+	}
 }
 
 func getTimeoutNumber() int64 {

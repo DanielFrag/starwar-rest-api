@@ -2,20 +2,30 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
-	"os"
 
 	"github.com/DanielFrag/starwar-rest-api/dto"
 	"github.com/DanielFrag/starwar-rest-api/utils"
 )
 
-var swapiURL string
+//PlanetService wrap the access to planet aux data
+type PlanetService interface {
+	GetSinglePlanet(externalID int32) (dto.PlanetDTO, error)
+	SearchPlanetByName(planetName string) (dto.PlanetDTO, error)
+}
 
-//GetSinglePlanet search the planet by its id
-func GetSinglePlanet(path string) (dto.Planet, error) {
+//SWAPIService request the external planet data
+type SWAPIService struct {
+	swapiURL       string
+	requestWrapper utils.RequestWrapper
+}
+
+//GetSinglePlanet search the planet by its path
+func (sw *SWAPIService) GetSinglePlanet(externalID int32) (dto.PlanetDTO, error) {
 	var p dto.PlanetDTO
-	res, resError := utils.PerformRequest(path, "GET", nil, nil)
+	path := fmt.Sprintf("%v/planets/%v", sw.swapiURL, externalID)
+	res, resError := sw.requestWrapper.PerformRequest(path, "GET", nil, nil)
 	if resError != nil {
 		return p, resError
 	}
@@ -27,29 +37,30 @@ func GetSinglePlanet(path string) (dto.Planet, error) {
 }
 
 //SearchPlanetByName search the planet by its name
-func SearchPlanetByName(planetName string) (dto.Planet, error) {
+func (sw *SWAPIService) SearchPlanetByName(planetName string) (dto.PlanetDTO, error) {
 	var planetList dto.PlanetListDTO
 	var planet dto.PlanetDTO
-	planetList, planetListError := getPlanets(fmt.Sprintf("%v/planets", getAPIUrl()))
+	planetList, planetListError := sw.getPlanets(fmt.Sprintf("%v/planets", sw.swapiURL))
 	if planetListError != nil {
 		return planet, planetListError
 	}
 	planet = filterPlanetsByName(planetList.Results, planetName)
 	for i := 0; planet.Name == "" && planetList.Next != ""; i++ {
-		log.Println(i)
-		log.Println(planetList.Next)
-		planetList, planetListError = getPlanets(planetList.Next)
+		planetList, planetListError = sw.getPlanets(planetList.Next)
 		if planetListError != nil {
 			return planet, planetListError
 		}
 		planet = filterPlanetsByName(planetList.Results, planetName)
 	}
-	return planet, nil
+	if planet.Name == "" {
+		planetListError = errors.New("Not found")
+	}
+	return planet, planetListError
 }
 
-func getPlanets(url string) (dto.PlanetListDTO, error) {
+func (sw *SWAPIService) getPlanets(url string) (dto.PlanetListDTO, error) {
 	var planetList dto.PlanetListDTO
-	res, resError := utils.PerformRequest(url, "GET", nil, nil)
+	res, resError := sw.requestWrapper.PerformRequest(url, "GET", nil, nil)
 	if resError != nil {
 		return planetList, resError
 	}
@@ -57,21 +68,22 @@ func getPlanets(url string) (dto.PlanetListDTO, error) {
 	return planetList, jsonError
 }
 
-func filterPlanetsByName(planets []dto.Planet, target string) dto.Planet {
+func (sw *SWAPIService) setAPIUrl(url string) {
+	sw.swapiURL = url
+}
+
+func filterPlanetsByName(planets []dto.PlanetDTO, target string) dto.PlanetDTO {
 	for _, planet := range planets {
 		if planet.Name == target {
 			return planet
 		}
 	}
-	return dto.Planet{}
+	return dto.PlanetDTO{}
 }
 
-func getAPIUrl() string {
-	if swapiURL == "" {
-		swapiURL = os.Getenv("SWAPI_URL")
-		if swapiURL == "" {
-			swapiURL = "https://swapi.co/api"
-		}
-	}
-	return swapiURL
+/*
+os.Getenv("SWAPI_URL")
+if swapiURL == "" {
+	swapiURL = "https://swapi.co/api"
 }
+*/
