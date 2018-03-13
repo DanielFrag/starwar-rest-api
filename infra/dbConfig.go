@@ -33,6 +33,14 @@ func StartDB() error {
 	if ds.dbName == "" {
 		ds.dbName = "starwars-rest-api"
 	}
+	planetsCollection := ds.session.DB(getDbName()).C("Planets")
+	planetsCollection.EnsureIndex(mgo.Index{
+		Key: []string{
+			"name",
+		},
+		Unique:   true,
+		DropDups: true,
+	})
 	return err
 }
 
