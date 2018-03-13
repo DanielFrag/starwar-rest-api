@@ -126,18 +126,10 @@ func getAllPlanetsData(pRepo repository.PlanetRepository, pAuxRepo repository.Pl
 	if planetsError != nil {
 		return planets, errors.New("Can't find the requested planets: " + planetsError.Error())
 	}
-	worker, semaphore := make(chan int, 3), make(chan int, len(planets))
-	for i := range planets {
-		planetIndex := i
-		worker <- 1
-		go func(index int) {
-			planets[index].NumberOfFilms = getPlanetNumberOfFilms(planets[index], pAuxRepo)
-			<-worker
-			semaphore <- 1
-		}(planetIndex)
-	}
-	for i := 0; i < len(planets); i++ {
-		<-semaphore
+	if len(planets) < 9 {
+		populateNumOfFilmsWithID(planets, pAuxRepo)
+	} else {
+		populateNumOfFilmsWithMap(planets, pAuxRepo)
 	}
 	return planets, nil
 }
@@ -155,11 +147,11 @@ func getSinglePlanetData(p url.Values, pRepo repository.PlanetRepository, pAuxRe
 	if planetError != nil {
 		return planet, errors.New("Can't find the requested planet: " + planetError.Error())
 	}
-	planet.NumberOfFilms = getPlanetNumberOfFilms(planet, pAuxRepo)
+	planet.NumberOfFilms = getSinglePlanetNumberOfFilms(planet, pAuxRepo)
 	return planet, nil
 }
 
-func getPlanetNumberOfFilms(planet model.Planet, r repository.PlanetAuxRepository) int32 {
+func getSinglePlanetNumberOfFilms(planet model.Planet, r repository.PlanetAuxRepository) int32 {
 	var planetData dto.PlanetDTO
 	var planetDataError error
 	if planet.ForeignID > 0 {
@@ -171,4 +163,36 @@ func getPlanetNumberOfFilms(planet model.Planet, r repository.PlanetAuxRepositor
 		return 0
 	}
 	return int32(len(planetData.Films))
+}
+
+func populateNumOfFilmsWithID(planets []model.Planet, pAuxRepo repository.PlanetAuxRepository) {
+	worker, semaphore := make(chan int, 3), make(chan int, len(planets))
+	for i := range planets {
+		planetIndex := i
+		worker <- 1
+		go func(index int) {
+			planets[index].NumberOfFilms = getSinglePlanetNumberOfFilms(planets[index], pAuxRepo)
+			<-worker
+			semaphore <- 1
+		}(planetIndex)
+	}
+	for i := 0; i < len(planets); i++ {
+		<-semaphore
+	}
+}
+
+func populateNumOfFilmsWithMap(planets []model.Planet, pAuxRepo repository.PlanetAuxRepository) {
+	planetsDTO, planetsDTOError := pAuxRepo.GetAllPlanets()
+	if planetsDTOError != nil {
+		return
+	}
+	m := make(map[string]*model.Planet)
+	for _, p := range planets {
+		m[p.Name] = &p
+	}
+	for _, p := range planetsDTO {
+		if m[p.Name] != nil {
+			m[p.Name].NumberOfFilms = int32(len(p.Films))
+		}
+	}
 }

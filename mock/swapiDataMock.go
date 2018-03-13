@@ -57,7 +57,7 @@ const Planet2 string = `{
 
 //PlanetPage1 mock data
 const PlanetPage1 string = `{
-    "count": 61,
+    "count": 21,
     "next": "https://swapi.co/api/planets/?page=2",
     "previous": null,
     "results": [
@@ -285,9 +285,9 @@ const PlanetPage1 string = `{
 
 //PlanetPage2 mock data
 const PlanetPage2 string = `{
-    "count": 61,
-    "next": "https://swapi.co/api/planets/?page=5",
-    "previous": "https://swapi.co/api/planets/?page=3",
+    "count": 21,
+    "next": "https://swapi.co/api/planets/?page=3",
+    "previous": "https://swapi.co/api/planets/?page=2",
     "results": [
         {
             "name": "Chandrila",
@@ -475,9 +475,9 @@ const PlanetPage2 string = `{
 
 //PlanetPage3 mock data
 const PlanetPage3 string = `{
-    "count": 61,
+    "count": 21,
     "next": null,
-    "previous": "https://swapi.co/api/planets/?page=6",
+    "previous": "https://swapi.co/api/planets/?page=2",
     "results": [
         {
             "name": "Jakku",

@@ -30,6 +30,21 @@ func (sw *SWAPIService) GetSinglePlanet(externalID int32) (dto.PlanetDTO, error)
 	return p, nil
 }
 
+//GetAllPlanets return all planets of swapi
+func (sw *SWAPIService) GetAllPlanets() ([]dto.PlanetDTO, error) {
+	planets := []dto.PlanetDTO{}
+	nextPage := fmt.Sprintf("%v/planets", sw.swapiURL)
+	for hasNext := true; hasNext; hasNext = nextPage != "" {
+		planetList, planetListError := sw.getPlanets(nextPage)
+		if planetListError != nil {
+			return planets, planetListError
+		}
+		nextPage = planetList.Next
+		planets = append(planets, planetList.Results...)
+	}
+	return planets, nil
+}
+
 //SearchPlanetByName search the planet by its name
 func (sw *SWAPIService) SearchPlanetByName(planetName string) (dto.PlanetDTO, error) {
 	var planetList dto.PlanetListDTO

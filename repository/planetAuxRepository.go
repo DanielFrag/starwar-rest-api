@@ -8,6 +8,7 @@ import (
 
 //PlanetAuxRepository interface to access the planet external data
 type PlanetAuxRepository interface {
+	GetAllPlanets() ([]dto.PlanetDTO, error)
 	GetSinglePlanet(externalID int32) (dto.PlanetDTO, error)
 	SearchPlanetByName(planetName string) (dto.PlanetDTO, error)
 }

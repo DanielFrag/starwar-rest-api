@@ -93,5 +93,12 @@ func (p *PlanetMock) InitializeDBMock() {
 			Terrain:   "stone",
 			ForeignID: 0,
 		},
+		model.Planet{
+			ID:        bson.NewObjectId(),
+			Name:      "Jakku",
+			Climate:   "bad",
+			Terrain:   "ugly",
+			ForeignID: 61,
+		},
 	}
 }

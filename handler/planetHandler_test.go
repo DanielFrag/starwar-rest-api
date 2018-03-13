@@ -331,6 +331,20 @@ func TestRemovePlanet(t *testing.T) {
 	})
 }
 
+func TestPopulateNumberOfFilms(t *testing.T) {
+	_, pRepo, pAuxRepo := prepareHandler(nil, true)
+	planetsPopWithID, _ := pRepo.GetPlanets()
+	planetsPopWithName, _ := pRepo.GetPlanets()
+	populateNumOfFilmsWithID(planetsPopWithID, pAuxRepo)
+	populateNumOfFilmsWithMap(planetsPopWithName, pAuxRepo)
+	for i := range planetsPopWithID {
+		if planetsPopWithID[i].NumberOfFilms != planetsPopWithName[i].NumberOfFilms {
+			t.Error(fmt.Sprintf("Inconsistent result. Planet %v has %v films with popID and %v films with popName", planetsPopWithID[i].Name, planetsPopWithID[i].NumberOfFilms, planetsPopWithName[i].NumberOfFilms))
+			return
+		}
+	}
+}
+
 func performRequest(url, method string, data []byte, handler http.Handler) (*httptest.ResponseRecorder, error) {
 	var req *http.Request
 	var reqError error
