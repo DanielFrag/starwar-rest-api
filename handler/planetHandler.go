@@ -35,6 +35,10 @@ func AddPlanet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Json error: "+jsonError.Error(), http.StatusInternalServerError)
 		return
 	}
+	if p.Name == "" || p.Climate == "" || p.Terrain == "" {
+		http.Error(w, "Incomplete planet data (missing name, climate, terrain)", http.StatusBadRequest)
+		return
+	}
 	planetExternalData, planetExternalDataError := planetAuxRepository.SearchPlanetByName(p.Name)
 	if planetExternalDataError == nil {
 		path := strings.Split(planetExternalData.URL, "/")
