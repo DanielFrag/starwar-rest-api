@@ -33,17 +33,15 @@ func (sw *SWAPIService) GetSinglePlanet(externalID int32) (dto.PlanetDTO, error)
 //SearchPlanetByName search the planet by its name
 func (sw *SWAPIService) SearchPlanetByName(planetName string) (dto.PlanetDTO, error) {
 	var planetList dto.PlanetListDTO
+	var planetListError error
 	var planet dto.PlanetDTO
-	planetList, planetListError := sw.getPlanets(fmt.Sprintf("%v/planets", sw.swapiURL))
-	if planetListError != nil {
-		return planet, planetListError
-	}
-	planet = filterPlanetsByName(planetList.Results, planetName)
-	for i := 0; planet.Name == "" && planetList.Next != ""; i++ {
-		planetList, planetListError = sw.getPlanets(planetList.Next)
+	nextPage := fmt.Sprintf("%v/planets", sw.swapiURL)
+	for hasNext := true; hasNext; hasNext = (planet.Name == "" && nextPage != "") {
+		planetList, planetListError = sw.getPlanets(nextPage)
 		if planetListError != nil {
 			return planet, planetListError
 		}
+		nextPage = planetList.Next
 		planet = filterPlanetsByName(planetList.Results, planetName)
 	}
 	if planet.Name == "" {
