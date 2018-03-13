@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"log"
 	"os"
 
 	"gopkg.in/mgo.v2"
@@ -22,6 +23,11 @@ func StartDB() error {
 	}
 	if ds.session == nil {
 		ds.session, err = mgo.Dial(mongoURL)
+		if err != nil {
+			panic(err)
+		} else {
+			log.Println("MongoDB conected")
+		}
 	}
 	ds.dbName = os.Getenv("DB_NAME")
 	if ds.dbName == "" {

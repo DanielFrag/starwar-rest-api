@@ -1,0 +1,803 @@
+{
+	"info": {
+		"name": "starwarsapi",
+		"_postman_id": "0616a2ea-2e1b-0fe2-a200-ba35d60dfe8b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /api/planets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/planets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"planets"
+					]
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "cdd37617-280f-4865-b7ad-5bd30cb2310c",
+					"name": "GET /api/planets",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "105",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:00:05 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookie": [],
+					"responseTime": 1448,
+					"body": "[{\"id\":\"5aa7e7e5abb4441fdd8b1a0b\",\"name\":\"Tatooine\",\"climate\":\"hot\",\"terrain\":\"sand\",\"numberOfFilms\":5}]\n"
+				},
+				{
+					"id": "53fe0eaf-34a8-4046-a989-c9b613847d74",
+					"name": "GET /api/planets",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "5",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:05:24 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookie": [],
+					"responseTime": 28,
+					"body": "null\n"
+				},
+				{
+					"id": "a4203c91-d717-4bc7-b6ff-a37e64b64ed5",
+					"name": "GET /api/planets",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "205",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:07:55 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookie": [],
+					"responseTime": 2630,
+					"body": "[{\"id\":\"5aa812edabb4442ef287e0ea\",\"name\":\"Sunda\",\"climate\":\"cold\",\"terrain\":\"ice\",\"numberOfFilms\":0},{\"id\":\"5aa8134cabb4442ef287e0eb\",\"name\":\"Tatooine\",\"climate\":\"hot\",\"terrain\":\"sand\",\"numberOfFilms\":5}]\n"
+				}
+			]
+		},
+		{
+			"name": "POST /api/planets",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Tatooine\",\n\t\"climate\": \"hot\",\n\t\"terrain\": \"sand\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/planets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"planets"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "158a4c28-75e8-4cea-a1bd-2dcdd7d87c9f",
+					"name": "POST /api/planets",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "Unsupported Media Type",
+					"code": 415,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "23",
+							"name": "Content-Length",
+							"description": ""
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": ""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 14:35:15 GMT",
+							"name": "Date",
+							"description": ""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"responseTime": "22",
+					"body": "Only json is supported\n"
+				},
+				{
+					"id": "0a124e56-5cf9-4628-9179-044b73be5eb2",
+					"name": "POST /api/planets",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Sunda\",\n\t\"climate\": \"cold\",\n\t\"terrain\": \"ice\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "6",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:05:34 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Location",
+							"value": "/api/planets?id=5aa812edabb4442ef287e0ea",
+							"name": "Location",
+							"description": "Used in redirection, or when a new resource has been created."
+						}
+					],
+					"cookie": [],
+					"responseTime": 4327,
+					"body": "added!"
+				},
+				{
+					"id": "7e18e893-6c3d-46bb-b514-82804b001284",
+					"name": "POST /api/planets",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Tatooine\",\n\t\"climate\": \"hot\",\n\t\"terrain\": \"sand\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/planets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "6",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:07:08 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Location",
+							"value": "/api/planets?id=5aa8134cabb4442ef287e0eb",
+							"name": "Location",
+							"description": "Used in redirection, or when a new resource has been created."
+						}
+					],
+					"cookie": [],
+					"responseTime": 3220,
+					"body": "added!"
+				}
+			]
+		},
+		{
+			"name": "GET /api/planets?id=",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/planets?id=5aa8134cabb4442ef287e0eb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"planets"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5aa8134cabb4442ef287e0eb",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "cc675436-52e8-4601-b63e-4a4c6d3150f4",
+					"name": "GET /api/planets?id=",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets?id=4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4",
+									"equals": true
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "41",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:10:32 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						}
+					],
+					"cookie": [],
+					"responseTime": 21,
+					"body": "Error: invalid input to ObjectIdHex: \"4\"\n"
+				},
+				{
+					"id": "1bc2f6f2-35a6-45f2-b684-848924bcbc29",
+					"name": "GET /api/planets?id=",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets?id=5aa7e7e5abb4441fdd8b1a0b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5aa7e7e5abb4441fdd8b1a0b",
+									"equals": true
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "43",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:11:32 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						}
+					],
+					"cookie": [],
+					"responseTime": 24,
+					"body": "Can't find the requested planet: not found\n"
+				},
+				{
+					"id": "75d14e9f-ac4e-4f7e-9a3d-10febf91ea12",
+					"name": "GET /api/planets?id=",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets?id=5aa8134cabb4442ef287e0eb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5aa8134cabb4442ef287e0eb",
+									"equals": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "103",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:12:11 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookie": [],
+					"responseTime": 1059,
+					"body": "{\"id\":\"5aa8134cabb4442ef287e0eb\",\"name\":\"Tatooine\",\"climate\":\"hot\",\"terrain\":\"sand\",\"numberOfFilms\":5}\n"
+				}
+			]
+		},
+		{
+			"name": "GET /api/planets?name=",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/planets?name=Tatooine",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"planets"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Tatooine",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "8256b7c8-3277-4d41-9c49-75d54cfee2dd",
+					"name": "GET /api/planets?name=",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets?name=Urubu",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Urubu",
+									"equals": true
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "43",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:09:38 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						}
+					],
+					"cookie": [],
+					"responseTime": 21,
+					"body": "Can't find the requested planet: not found\n"
+				}
+			]
+		},
+		{
+			"name": "DELETE /api/planets/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/planets/5aa812edabb4442ef287e0ea",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"planets",
+						"5aa812edabb4442ef287e0ea"
+					]
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "799a4814-9bbb-4da2-8d40-9caa0d5b7a8a",
+					"name": "DELETE /api/planets/:id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets/5aa812edabb4442ef287e0ea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets",
+								"5aa812edabb4442ef287e0ea"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:14:26 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookie": [],
+					"responseTime": 20,
+					"body": ""
+				},
+				{
+					"id": "2013484f-97de-4a55-8f93-fea6b0cd8757",
+					"name": "DELETE /api/planets/:id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/planets/5aa812edabb4442ef287e0ea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"planets",
+								"5aa812edabb4442ef287e0ea"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "plain",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "10",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 13 Mar 2018 18:15:09 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						}
+					],
+					"cookie": [],
+					"responseTime": 19,
+					"body": "not found\n"
+				}
+			]
+		}
+	]
+}

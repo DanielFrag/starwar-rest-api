@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -27,15 +28,12 @@ func TestAddPlanet(t *testing.T) {
 			Terrain: "stone",
 			Climate: "hot",
 		}
-		body := bytes.NewReader(utils.FormatJSON(planet))
-		req, reqError := http.NewRequest("POST", "/", body)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/", "POST", utils.FormatJSON(planet), hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		hfi.Handler.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 201 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 201, returned %v", result.StatusCode))
 			return
@@ -62,15 +60,12 @@ func TestAddPlanet(t *testing.T) {
 			Terrain: "stone",
 			Climate: "hot",
 		}
-		body := bytes.NewReader(utils.FormatJSON(planet))
-		req, reqError := http.NewRequest("POST", "/", body)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/", "POST", utils.FormatJSON(planet), hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		hfi.Handler.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 201 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 201, returned %v", result.StatusCode))
 			return
@@ -94,15 +89,13 @@ func TestAddPlanet(t *testing.T) {
 func TestGetPlanets(t *testing.T) {
 	t.Run("EmptyDB", func(t *testing.T) {
 		hfi, _, _ := prepareHandler(GetPlanets, false)
-		req, reqError := http.NewRequest("GET", "/", nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/", "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		hfi.Handler.ServeHTTP(reqRecorder, req)
 		var planets []model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planets)
+		json.Unmarshal(res.Body.Bytes(), &planets)
 		if len(planets) != 0 {
 			t.Error("The DB should be empty")
 			return
@@ -110,15 +103,13 @@ func TestGetPlanets(t *testing.T) {
 	})
 	t.Run("PopulatedDB", func(t *testing.T) {
 		hfi, planetRepository, planetAuxRepository := prepareHandler(GetPlanets, true)
-		req, reqError := http.NewRequest("GET", "/", nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/", "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		hfi.Handler.ServeHTTP(reqRecorder, req)
 		var planets []model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planets)
+		json.Unmarshal(res.Body.Bytes(), &planets)
 		if len(planets) == 0 {
 			t.Error("The DB should be populated")
 			return
@@ -139,20 +130,16 @@ func TestGetPlanets(t *testing.T) {
 }
 
 func TestFindPlanetByName(t *testing.T) {
-	hfi, planetRepository, planetAuxRepository := prepareHandler(FindPlanetByName, true)
+	hfi, planetRepository, planetAuxRepository := prepareHandler(GetPlanets, true)
 	t.Run("WithExternalData", func(t *testing.T) {
 		planetName := "Tatooine"
-		req, reqError := http.NewRequest("GET", "/"+planetName, nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?name="+planetName, "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
 		var planet model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planet)
+		json.Unmarshal(res.Body.Bytes(), &planet)
 		if planet.Name != planetName {
 			t.Error("Invalid planet result")
 			return
@@ -176,17 +163,13 @@ func TestFindPlanetByName(t *testing.T) {
 				planetName = planets[i].Name
 			}
 		}
-		req, reqError := http.NewRequest("GET", "/"+planetName, nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?name="+planetName, "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
 		var planet model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planet)
+		json.Unmarshal(res.Body.Bytes(), &planet)
 		if planet.Name != planetName {
 			t.Error("Invalid planet result")
 			return
@@ -198,32 +181,24 @@ func TestFindPlanetByName(t *testing.T) {
 	})
 	t.Run("Invalid", func(t *testing.T) {
 		planetName := "unknowPlanet"
-		req, reqError := http.NewRequest("GET", "/"+planetName, nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?name="+planetName, "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 			return
 		}
 	})
 	t.Run("NameNotProvided", func(t *testing.T) {
-		req, reqError := http.NewRequest("GET", "/", nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?name=", "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 			return
@@ -232,7 +207,7 @@ func TestFindPlanetByName(t *testing.T) {
 }
 
 func TestFindPlanetByID(t *testing.T) {
-	hfi, planetRepository, planetAuxRepository := prepareHandler(FindPlanetByID, true)
+	hfi, planetRepository, planetAuxRepository := prepareHandler(GetPlanets, true)
 	planets, _ := planetRepository.GetPlanets()
 	t.Run("WithExternalData", func(t *testing.T) {
 		var validID bson.ObjectId
@@ -241,17 +216,13 @@ func TestFindPlanetByID(t *testing.T) {
 				validID = planets[i].ID
 			}
 		}
-		req, reqError := http.NewRequest("GET", "/"+validID.Hex(), nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?id="+validID.Hex(), "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
 		var planet model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planet)
+		json.Unmarshal(res.Body.Bytes(), &planet)
 		if planet.ID.Hex() != validID.Hex() {
 			t.Error("Invalid planet result")
 			return
@@ -274,17 +245,13 @@ func TestFindPlanetByID(t *testing.T) {
 				validID = planets[i].ID
 			}
 		}
-		req, reqError := http.NewRequest("GET", "/"+validID.Hex(), nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?id="+validID.Hex(), "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
 		var planet model.Planet
-		json.Unmarshal(reqRecorder.Body.Bytes(), &planet)
+		json.Unmarshal(res.Body.Bytes(), &planet)
 		if planet.ID.Hex() != validID.Hex() {
 			t.Error("Invalid planet result")
 			return
@@ -296,32 +263,24 @@ func TestFindPlanetByID(t *testing.T) {
 	})
 	t.Run("Invalid", func(t *testing.T) {
 		invalidID := bson.NewObjectId()
-		req, reqError := http.NewRequest("GET", "/"+invalidID.Hex(), nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?id="+invalidID.Hex(), "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 			return
 		}
 	})
 	t.Run("IDNotProvided", func(t *testing.T) {
-		req, reqError := http.NewRequest("GET", "/", nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/?id=", "GET", nil, hfi.Handler)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 			return
@@ -331,17 +290,15 @@ func TestFindPlanetByID(t *testing.T) {
 
 func TestRemovePlanet(t *testing.T) {
 	hfi, planetRepository, _ := prepareHandler(RemovePlanet, true)
+	r := mux.NewRouter()
+	r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("DELETE")
 	t.Run("ValidID", func(t *testing.T) {
 		planets, _ := planetRepository.GetPlanets()
-		req, reqError := http.NewRequest("GET", "/"+planets[0].ID.Hex(), nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		_, resError := performRequest("/"+planets[0].ID.Hex(), "DELETE", nil, r)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
 		updatedPlanetsCollection, _ := planetRepository.GetPlanets()
 		if len(updatedPlanetsCollection) >= len(planets) {
 			t.Error(fmt.Sprintf("The expected length after remove was %v, but got %v", len(updatedPlanetsCollection), len(planets)))
@@ -350,36 +307,45 @@ func TestRemovePlanet(t *testing.T) {
 	})
 	t.Run("InvalidID", func(t *testing.T) {
 		invalidID := bson.NewObjectId()
-		req, reqError := http.NewRequest("GET", "/"+invalidID.Hex(), nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/"+invalidID.Hex(), "DELETE", nil, r)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{id}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 		}
 	})
 	t.Run("IDNotProvided", func(t *testing.T) {
-		req, reqError := http.NewRequest("GET", "/", nil)
-		if reqError != nil {
-			t.Error("Error to create the request: " + reqError.Error())
+		res, resError := performRequest("/", "DELETE", nil, r)
+		if resError != nil {
+			t.Error(resError.Error())
 			return
 		}
-		reqRecorder := httptest.NewRecorder()
-		r := mux.NewRouter()
-		r.StrictSlash(true).HandleFunc("/{name}", hfi.Handler).Methods("GET")
-		r.ServeHTTP(reqRecorder, req)
-		result := reqRecorder.Result()
+		result := res.Result()
 		if result.StatusCode != 404 {
 			t.Error(fmt.Sprintf("Wrong status code. Expected 404 and got: %v", result.StatusCode))
 			return
 		}
 	})
+}
+
+func performRequest(url, method string, data []byte, handler http.Handler) (*httptest.ResponseRecorder, error) {
+	var req *http.Request
+	var reqError error
+	if data != nil {
+		body := bytes.NewReader(data)
+		req, reqError = http.NewRequest(method, url, body)
+	} else {
+		req, reqError = http.NewRequest(method, url, nil)
+	}
+	if reqError != nil {
+		return nil, errors.New("Error to create the request: " + reqError.Error())
+	}
+	reqRecorder := httptest.NewRecorder()
+	handler.ServeHTTP(reqRecorder, req)
+	return reqRecorder, nil
 }
 
 func prepareHandler(h http.HandlerFunc, initializeDB bool) (utils.HandlerFuncInjector, repository.PlanetRepository, repository.PlanetAuxRepository) {
