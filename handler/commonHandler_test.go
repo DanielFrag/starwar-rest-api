@@ -29,7 +29,7 @@ func TestCorsSetup(t *testing.T) {
 	methodsOk, missingMethodsDesc := checkHeaders(allowMethods, []string{
 		"GET",
 		"POST",
-		"PUT",
+		"DELETE",
 		"OPTIONS",
 	})
 	if !methodsOk {

@@ -12,6 +12,7 @@ import (
 	"github.com/DanielFrag/starwar-rest-api/repository"
 	"github.com/DanielFrag/starwar-rest-api/utils"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 )
 
 //AddPlanet save a new planet
@@ -60,7 +61,7 @@ func GetPlanets(w http.ResponseWriter, r *http.Request) {
 	}
 	planets, planetsError := planetRepository.GetPlanets()
 	if planetsError != nil {
-		http.Error(w, "Can't find the requested planets: "+planetsError.Error(), http.StatusInternalServerError)
+		http.Error(w, "Can't find the requested planets: "+planetsError.Error(), http.StatusNotFound)
 		return
 	}
 	worker, semaphore := make(chan int, 3), make(chan int, len(planets))
@@ -68,7 +69,9 @@ func GetPlanets(w http.ResponseWriter, r *http.Request) {
 		planetIndex := i
 		worker <- 1
 		go func(index int) {
-			planets[index].NumberOfFilms = getPlanetNumberOfFilms(planets[index].ForeignID, planetAuxRepository)
+			if planets[index].ForeignID > 0 {
+				planets[index].NumberOfFilms = getPlanetNumberOfFilms(planets[index].ForeignID, planetAuxRepository)
+			}
 			<-worker
 			semaphore <- 1
 		}(planetIndex)
@@ -83,17 +86,79 @@ func GetPlanets(w http.ResponseWriter, r *http.Request) {
 
 //FindPlanetByID find planet by id
 func FindPlanetByID(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	if vars["id"] == "" {
+		http.Error(w, "Error id not provided", http.StatusBadRequest)
+		return
+	}
+	planetRepository, planetAuxRepository, planetRepositoryError := extractPlanetRepository(r)
+	if planetRepositoryError != nil {
+		http.Error(w, planetRepositoryError.Error(), http.StatusInternalServerError)
+		return
+	}
+	planet, planetError := planetRepository.FindPlanetByID(vars["id"])
+	if planetError != nil {
+		http.Error(w, "Can't find the requested planet: "+planetError.Error(), http.StatusNotFound)
+		return
+	}
+	if planet.ForeignID > 0 {
+		planet.NumberOfFilms = getPlanetNumberOfFilms(planet.ForeignID, planetAuxRepository)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(utils.FormatJSON(planet))
+	return
 }
 
 //FindPlanetByName find planet by name
 func FindPlanetByName(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	if vars["name"] == "" {
+		http.Error(w, "Error name not provided", http.StatusBadRequest)
+		return
+	}
+	planetRepository, planetAuxRepository, planetRepositoryError := extractPlanetRepository(r)
+	if planetRepositoryError != nil {
+		http.Error(w, planetRepositoryError.Error(), http.StatusInternalServerError)
+		return
+	}
+	planet, planetError := planetRepository.FindPlanetByName(vars["name"])
+	if planetError != nil {
+		http.Error(w, "Can't find the requested planet: "+planetError.Error(), http.StatusNotFound)
+		return
+	}
+	if planet.ForeignID > 0 {
+		planet.NumberOfFilms = getPlanetNumberOfFilms(planet.ForeignID, planetAuxRepository)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(utils.FormatJSON(planet))
+	return
 }
 
 //RemovePlanet find and remove a planet based on its id
 func RemovePlanet(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	if vars["id"] == "" {
+		http.Error(w, "Error id not provided", http.StatusBadRequest)
+		return
+	}
+	planetRepository, _, planetRepositoryError := extractPlanetRepository(r)
+	if planetRepositoryError != nil {
+		http.Error(w, planetRepositoryError.Error(), http.StatusInternalServerError)
+		return
+	}
+	planetError := planetRepository.RemovePlanet(vars["id"])
+	if planetError != nil {
+		message := planetError.Error()
+		var code int
+		if strings.Contains(message, "not found") {
+			code = http.StatusNotFound
+		} else {
+			code = http.StatusInternalServerError
+		}
+		http.Error(w, message, code)
+		return
+	}
+	w.WriteHeader(204)
 }
 
 func extractPlanetRepository(r *http.Request) (repository.PlanetRepository, repository.PlanetAuxRepository, error) {
