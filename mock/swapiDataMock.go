@@ -1,5 +1,6 @@
 package mock
 
+//Planet1 mock data
 const Planet1 string = `{
     "name": "Tatooine",
     "rotation_period": "23",
@@ -34,6 +35,7 @@ const Planet1 string = `{
     "url": "https://swapi.co/api/planets/1/"
 }`
 
+//Planet2 mock data
 const Planet2 string = `{
     "name": "Chandrila",
     "rotation_period": "20",
@@ -53,6 +55,7 @@ const Planet2 string = `{
     "url": "https://swapi.co/api/planets/32/"
 }`
 
+//PlanetPage1 mock data
 const PlanetPage1 string = `{
     "count": 61,
     "next": "https://swapi.co/api/planets/?page=2",
@@ -280,6 +283,7 @@ const PlanetPage1 string = `{
     ]
 }`
 
+//PlanetPage2 mock data
 const PlanetPage2 string = `{
     "count": 61,
     "next": "https://swapi.co/api/planets/?page=5",
@@ -469,6 +473,7 @@ const PlanetPage2 string = `{
     ]
 }`
 
+//PlanetPage3 mock data
 const PlanetPage3 string = `{
     "count": 61,
     "next": null,

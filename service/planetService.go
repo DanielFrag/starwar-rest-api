@@ -9,12 +9,6 @@ import (
 	"github.com/DanielFrag/starwar-rest-api/utils"
 )
 
-//PlanetService wrap the access to planet aux data
-type PlanetService interface {
-	GetSinglePlanet(externalID int32) (dto.PlanetDTO, error)
-	SearchPlanetByName(planetName string) (dto.PlanetDTO, error)
-}
-
 //SWAPIService request the external planet data
 type SWAPIService struct {
 	swapiURL       string
@@ -68,10 +62,6 @@ func (sw *SWAPIService) getPlanets(url string) (dto.PlanetListDTO, error) {
 	return planetList, jsonError
 }
 
-func (sw *SWAPIService) setAPIUrl(url string) {
-	sw.swapiURL = url
-}
-
 func filterPlanetsByName(planets []dto.PlanetDTO, target string) dto.PlanetDTO {
 	for _, planet := range planets {
 		if planet.Name == target {
@@ -81,9 +71,10 @@ func filterPlanetsByName(planets []dto.PlanetDTO, target string) dto.PlanetDTO {
 	return dto.PlanetDTO{}
 }
 
-/*
-os.Getenv("SWAPI_URL")
-if swapiURL == "" {
-	swapiURL = "https://swapi.co/api"
+//GetPlanetService return the entity responsable to access the external planet data
+func GetPlanetService(r utils.RequestWrapper) *SWAPIService {
+	return &SWAPIService{
+		swapiURL:       "https://swapi.co/api",
+		requestWrapper: r,
+	}
 }
-*/

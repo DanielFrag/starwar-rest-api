@@ -4,23 +4,16 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/DanielFrag/starwar-rest-api/mock"
 	"github.com/DanielFrag/starwar-rest-api/model"
-	"github.com/DanielFrag/starwar-rest-api/repository"
 	"gopkg.in/mgo.v2/bson"
 )
 
 //TestPlanetDB test the MongoDB manipulation
 func TestPlanetDB(t *testing.T) {
-	testPlanetDB(t, &PlanetMGO{})
+	testPlanetDB(t, PlanetMGO{})
 }
 
-//TestPlanetDBMock test the mock manipulation
-func TestPlanetDBMock(t *testing.T) {
-	testPlanetDB(t, &mock.PlanetMock{})
-}
-
-func testPlanetDB(t *testing.T, planetRepository repository.PlanetRepository) {
+func testPlanetDB(t *testing.T, planetRepository PlanetMGO) {
 	var planetID1, planetID2 string
 	defer func() {
 		recoverError := recover()

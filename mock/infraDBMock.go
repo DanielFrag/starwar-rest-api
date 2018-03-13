@@ -21,6 +21,9 @@ func (p *PlanetMock) AddPlanet(planet model.Planet) (string, error) {
 
 //GetPlanets return the 'planetList'
 func (p *PlanetMock) GetPlanets() ([]model.Planet, error) {
+	if p.planetList == nil {
+		p.planetList = []model.Planet{}
+	}
 	return p.planetList, nil
 }
 
@@ -64,7 +67,7 @@ func (p *PlanetMock) InitializeDBMock() {
 	p.planetList = []model.Planet{
 		model.Planet{
 			ID:        bson.NewObjectId(),
-			Name:      "sunda",
+			Name:      "Tatooine",
 			Climate:   "hot",
 			Terrain:   "stone",
 			ForeignID: 1,
@@ -74,14 +77,21 @@ func (p *PlanetMock) InitializeDBMock() {
 			Name:      "foo",
 			Climate:   "cold",
 			Terrain:   "wather",
-			ForeignID: 2,
+			ForeignID: 0,
 		},
 		model.Planet{
 			ID:        bson.NewObjectId(),
 			Name:      "bar",
 			Climate:   "ok",
 			Terrain:   "grass",
-			ForeignID: 3,
+			ForeignID: 0,
+		},
+		model.Planet{
+			ID:        bson.NewObjectId(),
+			Name:      "sunda",
+			Climate:   "hot",
+			Terrain:   "stone",
+			ForeignID: 0,
 		},
 	}
 }

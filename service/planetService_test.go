@@ -1,32 +1,18 @@
 package service
 
 import (
-	"errors"
-	"io"
 	"testing"
 
 	"github.com/DanielFrag/starwar-rest-api/mock"
 	"github.com/DanielFrag/starwar-rest-api/utils"
 )
 
-type requestMock struct{}
-
-func (r *requestMock) PerformRequest(url string, method string, headers map[string]string, body io.Reader) ([]byte, error) {
-	if url == "https://swapi.co/api/planets/-1" {
-		return nil, errors.New("404 Not found")
-	} else if url == "https://swapi.co/api/planets/1" {
-		return []byte(mock.Planet1), nil
-	} else if url == "https://swapi.co/api/planets" {
-		return []byte(mock.PlanetPage1), nil
-	} else if url == "https://swapi.co/api/planets/?page=2" {
-		return []byte(mock.PlanetPage2), nil
-	} else {
-		return []byte(mock.PlanetPage3), nil
-	}
-}
-
 func TestServiceWithMock(t *testing.T) {
-	requestUtils := requestMock{}
+	requestUtils := mock.RequestMock{}
+	requestUtils.AddRequest("https://swapi.co/api/planets/-1", "GET", nil)
+	requestUtils.AddRequest("https://swapi.co/api/planets/1", "GET", []byte(mock.Planet1))
+	requestUtils.AddRequest("https://swapi.co/api/planets", "GET", []byte(mock.PlanetPage1))
+	requestUtils.AddRequest("https://swapi.co/api/planets/?page=2", "GET", []byte(mock.PlanetPage2))
 	startTest(t, &requestUtils)
 }
 

@@ -68,3 +68,8 @@ func (p *PlanetMGO) RemovePlanet(planetID string) error {
 	planetCollection := p.session.DB(getDbName()).C("Planets")
 	return planetCollection.RemoveId(bson.ObjectIdHex(planetID))
 }
+
+//GetPlanetDB return the entity responsable to access the planet db
+func GetPlanetDB() *PlanetMGO {
+	return &PlanetMGO{}
+}

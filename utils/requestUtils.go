@@ -10,11 +10,6 @@ import (
 	"time"
 )
 
-//RequestWrapper exposes the method to perform a web request
-type RequestWrapper interface {
-	PerformRequest(url string, method string, headers map[string]string, body io.Reader) ([]byte, error)
-}
-
 //RequestUtils wrap the web request for external resources
 type RequestUtils struct {
 	client *http.Client
